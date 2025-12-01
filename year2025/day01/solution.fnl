@@ -21,17 +21,13 @@
 (let [num-zeros (count-zeros rotations 1 50 0)] num-zeros)
 
 ; part 2
-
-(fn add-all-zeros [acc curr rotation]
-  (let [dist-to-zero (case rotation ["L" _] curr ["R" _] (- 100 curr))]
-    (case rotation
-      (where [_ n] (= n dist-to-zero)) (+ acc 1)
-      (where [_ n] (< n dist-to-zero)) acc
-      (where [_ n] (> n dist-to-zero)) (let [extra-zeros (// (- n dist-to-zero)
-                                                             100)]
-                                         (if (= 0 dist-to-zero)
-                                             (+ acc extra-zeros)
-                                             (+ acc 1 extra-zeros))))))
+(fn add-all-zeros [acc curr [dir n]]
+  (let [dist-to-zero (if (= "L" dir) curr (- 100 curr))]
+    (if (< n dist-to-zero) acc
+        (= n dist-to-zero) (+ acc 1)
+        (> n dist-to-zero) (let [extra-zeros (// (- n dist-to-zero) 100)]
+                             (if (= 0 dist-to-zero) (+ acc extra-zeros)
+                                 (+ acc 1 extra-zeros))))))
 
 (fn count-all-zeros [rots i curr acc]
   (if (> i (length rots))
