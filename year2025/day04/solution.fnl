@@ -10,22 +10,18 @@
                 [(- x 1) (+ y 1)]
                 [x (+ y 1)]
                 [(+ x 1) (+ y 1)]]]
-    (accumulate [acc {} _ [x y] (ipairs coords)]
+    (accumulate [acc 0 _ [x y] (ipairs coords)]
       (case (?. grid x y)
-        "@" (do
-              (table.insert acc [x y])
-              acc)
+        "@" (+ acc 1)
         _ acc))))
 
 (fn removable [grid]
   (accumulate [acc [] y line (ipairs grid)]
     (accumulate [removed acc x _ (ipairs line)]
-      (if (= (. grid x y) "@")
-          (case (get-adj grid [x y])
-            (where adj (> 4 (length adj))) (do
-                                             (table.insert removed [x y])
-                                             removed)
-            _ removed)
+      (if (and (= (. grid x y) "@") (> 4 (get-adj grid [x y])))
+          (do
+            (table.insert removed [x y])
+            removed)
           removed))))
 
 ; part 1
