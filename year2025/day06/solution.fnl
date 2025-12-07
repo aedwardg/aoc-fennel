@@ -24,19 +24,17 @@
                                        (.. acc (. num-chars row col))))
                            "|")))
 
-(local reversed-ops (fcollect [i (length operators) 1 -1] (. operators i)))
-
 (local groups (accumulate [acc [[]] _ num (ipairs reversed-nums)]
                 (case num
                   "|" (do
-                        (table.insert acc [])
+                        (table.insert acc 1 [])
                         acc)
                   _ (do
-                      (table.insert (. acc (length acc)) num)
+                      (table.insert (. acc 1) num)
                       acc))))
 
-(faccumulate [sum 0 col 1 (length reversed-ops)]
-  (+ (let [[start fun] (case (. reversed-ops col)
+(faccumulate [sum 0 col 1 (length operators)]
+  (+ (let [[start fun] (case (. operators col)
                          "+" [0 #(+ $1 $2)]
                          "*" [1 #(* $1 $2)])]
        (accumulate [acc start _ num (ipairs (. groups col))]
